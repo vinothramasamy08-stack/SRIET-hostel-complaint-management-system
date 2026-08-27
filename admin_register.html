@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Register Staff Account - Hostel Complaint System{% endblock %}
+
+{% block content %}
+<div class="card login-card">
+    <h2>🔐 Register Staff Account</h2>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">Create a management login (Staff Security Passcode required)</p>
+
+    <form method="POST" action="{{ url_for('admin_register') }}">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                placeholder="Choose username" 
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                placeholder="Create password" 
+                required
+            >
+        </div>
+
+        <div class="form-group" style="background: #fff8e6; padding: 14px; border-radius: 8px; border: 1px solid #ffe082;">
+            <label for="staff_key" style="color: #b45309;">🔑 Staff Security Passcode</label>
+            <input 
+                type="password" 
+                id="staff_key" 
+                name="staff_key" 
+                placeholder="Enter Secret Management Passcode" 
+                required
+                style="border-color: #f59e0b;"
+            >
+            <small style="color: #92400e; font-size: 0.82rem;">Required to authorize creation of management staff account.</small>
+        </div>
+
+        <button type="submit" class="btn btn-secondary btn-block">
+            Register Staff Account
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 18px;">
+        <a href="{{ url_for('admin_login') }}" style="color: var(--primary-color); font-weight: 600; text-decoration: none;">
+            Already registered? Login here
+        </a>
+    </div>
+
+    <div class="demo-box" style="margin-top: 20px;">
+        <strong>💡 Staff Security Passcode:</strong> <code>STAFF2026</code>
+    </div>
+</div>
+{% endblock %}

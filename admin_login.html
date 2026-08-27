@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Management Login - Hostel Complaint System{% endblock %}
+
+{% block content %}
+<div class="card login-card">
+    <h2>🔐 Single Management Portal</h2>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Restricted to the sole authorized Hostel Management Administrator
+    </p>
+
+    <form method="POST" action="{{ url_for('admin_login') }}">
+        <div class="form-group">
+            <label for="username">Management Username</label>
+            <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                placeholder="Sole Admin Username (admin)" 
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Account Password</label>
+            <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                placeholder="Enter password" 
+                required
+            >
+        </div>
+
+        <div class="form-group" style="background: #fff8e6; padding: 14px; border-radius: 8px; border: 1px solid #ffe082;">
+            <label for="staff_key" style="color: #b45309;">🔑 Management Master Passcode</label>
+            <input 
+                type="password" 
+                id="staff_key" 
+                name="staff_key" 
+                placeholder="Enter Master Management Passcode" 
+                required
+                style="border-color: #f59e0b;"
+            >
+            <small style="color: #92400e; font-size: 0.82rem;">Only the authorized single management administrator can log in.</small>
+        </div>
+
+        <button type="submit" class="btn btn-secondary btn-block" style="margin-top: 15px;">
+            🔒 Verify & Access Portal
+        </button>
+    </form>
+
+    <div class="demo-box" style="margin-top: 25px;">
+        <strong>💡 Single Admin Credentials:</strong><br>
+        Username: <code>admin</code><br>
+        Password: <code>admin123</code><br>
+        Master Passcode: <code>STAFF2026</code>
+    </div>
+</div>
+{% endblock %}

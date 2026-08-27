@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Management Dashboard - Hostel Complaint System{% endblock %}
+
+{% block content %}
+<div class="card-header-flex">
+    <h2>🔐 Management Dashboard</h2>
+    <p style="color: var(--text-muted);">Restricted Logistics & Maintenance Staff Center</p>
+</div>
+
+<!-- Stats Counter Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Complaints</div>
+        <div class="stat-number">{{ stats.total }}</div>
+    </div>
+    <div class="stat-card" style="border-top: 4px solid #f59e0b;">
+        <div class="stat-label">Pending</div>
+        <div class="stat-number" style="color: #92400e;">{{ stats.pending }}</div>
+    </div>
+    <div class="stat-card" style="border-top: 4px solid #0284c7;">
+        <div class="stat-label">In Progress</div>
+        <div class="stat-number" style="color: #075985;">{{ stats.in_progress }}</div>
+    </div>
+    <div class="stat-card" style="border-top: 4px solid #9333ea;">
+        <div class="stat-label">Rectified</div>
+        <div class="stat-number" style="color: #6b21a8;">{{ stats.rectified }}</div>
+    </div>
+    <div class="stat-card" style="border-top: 4px solid #16a34a;">
+        <div class="stat-label">Resolved</div>
+        <div class="stat-number" style="color: #166534;">{{ stats.resolved }}</div>
+    </div>
+</div>
+
+<div class="card-header-flex">
+    <h3>All Hostel Complaints</h3>
+    <form method="GET" action="{{ url_for('admin_dashboard') }}" class="filter-group">
+        <label for="status">Filter Status:</label>
+        <select name="status" id="status" onchange="this.form.submit()">
+            <option value="All" {% if selected_status == 'All' %}selected{% endif %}>All Statuses</option>
+            <option value="Pending" {% if selected_status == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="In Progress" {% if selected_status == 'In Progress' %}selected{% endif %}>In Progress</option>
+            <option value="Rectified" {% if selected_status == 'Rectified' %}selected{% endif %}>Rectified</option>
+            <option value="Resolved" {% if selected_status == 'Resolved' %}selected{% endif %}>Resolved</option>
+        </select>
+    </form>
+</div>
+
+{% if not complaints %}
+    <div class="card" style="text-align: center; padding: 40px;">
+        <h4 style="color: var(--text-muted);">No complaints match the selected filter.</h4>
+    </div>
+{% else %}
+    {% for c in complaints %}
+        <div class="card complaint-card status-{{ c.status | replace(' ', '-') }}">
+            <div class="complaint-header">
+                <h4>Complaint #{{ c.id }} &bull; {{ c.category }}</h4>
+                <span class="badge badge-{{ c.status.lower() | replace(' ', '-') }}">
+                    {{ c.status }}
+                </span>
+            </div>
+
+            <div class="complaint-meta">
+                👤 <strong>Student ID:</strong> {{ c.student_id }} &bull; 
+                📍 <strong>Location:</strong> {{ c.location }} &bull; 
+                📅 <strong>Date:</strong> {{ c.created_at }}
+            </div>
+
+            <div style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                <strong>Student Complaint:</strong>
+                <p style="margin-top: 5px;">{{ c.description }}</p>
+            </div>
+
+            <form 
+                method="POST" 
+                action="{{ url_for('update_complaint', complaint_id=c.id) }}" 
+                enctype="multipart/form-data"
+                style="background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color);"
+            >
+                <h5 style="margin-bottom: 14px; color: var(--primary-color);">Update Complaint Resolution Status</h5>
+
+                <div class="form-group">
+                    <label for="status_{{ c.id }}">Update Status</label>
+                    <select name="status" id="status_{{ c.id }}">
+                        <option value="Pending" {% if c.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="In Progress" {% if c.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Rectified" {% if c.status == 'Rectified' %}selected{% endif %}>Rectified</option>
+                        <option value="Resolved" {% if c.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rectification_{{ c.id }}">Management Rectification Action Details</label>
+                    <textarea 
+                        name="rectification" 
+                        id="rectification_{{ c.id }}" 
+                        rows="3" 
+                        placeholder="Explain actions taken to fix this issue..."
+                    >{{ c.rectification or '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="proof_{{ c.id }}">Upload Proof Attachment (JPG, PNG, WEBP, PDF)</label>
+                    <input 
+                        type="file" 
+                        name="proof" 
+                        id="proof_{{ c.id }}" 
+                        accept=".jpg,.jpeg,.png,.webp,.pdf"
+                    >
+                    {% if c.proof %}
+                        <div style="margin-top: 8px;">
+                            <a href="{{ url_for('uploads', filename=c.proof) }}" target="_blank" class="proof-link">
+                                📷 Existing Proof Attachment
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-sm">
+                    Save Complaint Update
+                </button>
+            </form>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

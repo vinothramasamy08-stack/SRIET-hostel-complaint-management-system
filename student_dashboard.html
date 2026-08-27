@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - Hostel Complaint System{% endblock %}
+
+{% block content %}
+<div class="card card-header-flex">
+    <div>
+        <h2>Welcome, {{ session['student_name'] }} 👋</h2>
+        <p style="color: var(--text-muted);">Student ID: <strong>{{ session['student_id'] }}</strong></p>
+    </div>
+
+    <a href="{{ url_for('raise_complaint') }}" class="btn">
+        ➕ Raise New Complaint
+    </a>
+</div>
+
+<div class="card-header-flex">
+    <h3>My Complaints</h3>
+    <form method="GET" action="{{ url_for('student_dashboard') }}" class="filter-group">
+        <label for="status">Filter by Status:</label>
+        <select name="status" id="status" onchange="this.form.submit()">
+            <option value="All" {% if selected_status == 'All' %}selected{% endif %}>All Statuses</option>
+            <option value="Pending" {% if selected_status == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="In Progress" {% if selected_status == 'In Progress' %}selected{% endif %}>In Progress</option>
+            <option value="Rectified" {% if selected_status == 'Rectified' %}selected{% endif %}>Rectified</option>
+            <option value="Resolved" {% if selected_status == 'Resolved' %}selected{% endif %}>Resolved</option>
+        </select>
+    </form>
+</div>
+
+{% if not complaints %}
+    <div class="card" style="text-align: center; padding: 40px;">
+        <h4 style="color: var(--text-muted);">No complaints found.</h4>
+        <p style="margin-top: 10px;">If you have any hostel maintenance issues, click "+ Raise New Complaint" above.</p>
+    </div>
+{% else %}
+    {% for c in complaints %}
+        <div class="card complaint-card status-{{ c.status | replace(' ', '-') }}">
+            <div class="complaint-header">
+                <h4 style="color: var(--primary-color);">Complaint #{{ c.id }} - {{ c.category }}</h4>
+                <span class="badge badge-{{ c.status.lower() | replace(' ', '-') }}">
+                    {{ c.status }}
+                </span>
+            </div>
+
+            <div class="complaint-meta">
+                📍 <strong>Location:</strong> {{ c.location }} &bull; 
+                📅 <strong>Submitted:</strong> {{ c.created_at }}
+            </div>
+
+            <div class="complaint-body">
+                <p><strong>Description:</strong></p>
+                <p style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+                    {{ c.description }}
+                </p>
+
+                {% if c.rectification %}
+                    <div class="action-box">
+                        <p style="color: #1e293b;"><strong>🔧 Management Resolution Note:</strong></p>
+                        <p>{{ c.rectification }}</p>
+                    </div>
+                {% endif %}
+
+                {% if c.proof %}
+                    <div style="margin-top: 12px;">
+                        <a href="{{ url_for('uploads', filename=c.proof) }}" target="_blank" class="proof-link">
+                            📷 View Rectification Proof Attachment
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

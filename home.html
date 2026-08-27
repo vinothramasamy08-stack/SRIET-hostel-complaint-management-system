@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Hostel Complaint System{% endblock %}
+
+{% block content %}
+<div class="card hero-card">
+    <h1>🏠 Hostel Complaint Management System</h1>
+    <p>
+        Register hostel issues, track resolution progress, and access official management rectification actions.
+    </p>
+
+    <div class="buttons-flex">
+        <a href="{{ url_for('student_login') }}" class="btn">
+            🎓 Student Portal
+        </a>
+        <a href="{{ url_for('admin_login') }}" class="btn btn-secondary">
+            🔐 Management Portal (Staff Only)
+        </a>
+    </div>
+</div>
+{% endblock %}

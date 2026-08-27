@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Student Portal Access - Hostel Complaint System{% endblock %}
+
+{% block content %}
+<div class="card login-card">
+    <h2>🎓 Student Portal Access</h2>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Enter your Student Register Number to access your complaint dashboard directly.
+    </p>
+
+    <form method="POST" action="{{ url_for('student_login') }}">
+        <div class="form-group">
+            <label for="student_id">Student Register Number / Student ID</label>
+            <input 
+                type="text" 
+                id="student_id" 
+                name="student_id" 
+                placeholder="Enter Register No. (e.g. STU001, REG101, 21CS045)" 
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                placeholder="Enter Password (Default: 12345)" 
+            >
+            <small style="color: var(--text-muted); font-size: 0.82rem;">First-time students can enter their Register Number and click Access below.</small>
+        </div>
+
+        <button type="submit" class="btn btn-block" style="margin-top: 15px;">
+            🚀 Access Student Dashboard
+        </button>
+    </form>
+
+    <div class="demo-box" style="margin-top: 22px;">
+        <strong>💡 Quick Demo Register Number:</strong><br>
+        Register No: <code>STU001</code> | Password: <code>12345</code><br>
+        <span style="font-size: 0.82rem; color: #475467;">New students can enter any Register No. to log in instantly!</span>
+    </div>
+</div>
+{% endblock %}
