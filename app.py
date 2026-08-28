@@ -12,7 +12,7 @@ app = Flask(
     static_folder=os.path.join(BASE_DIR, "static")
 )
 app.secret_key = os.environ.get("SECRET_KEY", "hostel_complaint_system_secure_key_2026")
-
+init_db()
 # Master Management Security Passcode for the Single Admin
 STAFF_SECURITY_KEY = os.environ.get("STAFF_SECURITY_KEY", "STAFF2026")
 
